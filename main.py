@@ -19,9 +19,15 @@ def main():
 
     #circ.write_qasm_circuit('circuit.qasm')
 
-    mycirc = circuit.qcircuit(0);
-    qcirc = circ.read_qasm_circuit('tt.qasm')
+    #mycirc = circuit.qcircuit(0)
+    #qcirc = circ.read_qasm_circuit('tt.qasm')
+    #qcirc.qasm(formatted = True)
+
+    qcirc = circ.read_qasm_circuit('id4.qasm')
     qcirc.qasm(formatted = True)
+    qcirc.draw(output='mpl', filename='id4.png')
+    print(circ.check_identity(qcirc))
+
 
     print("Program End")
 

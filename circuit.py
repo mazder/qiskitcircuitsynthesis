@@ -80,6 +80,12 @@ class qcircuit:
         circ_id = QuantumCircuit(len(qubits))
         return self.check_qcirc_equivalent(self.qcirc, circ_id)
 
+    def check_identity(self, circ):
+        self.qcirc=circ
+        qubits=self.find_qubits()
+        circ_id = QuantumCircuit(len(qubits))
+        return self.check_qcirc_equivalent(self.qcirc, circ_id)
+
     def get_inverse_quantum_toffoli(self, circ, x, y, z):
         circ.cx(x,y)
         circ.t(y)
@@ -169,3 +175,96 @@ class qcircuit:
 
     def read_qasm_circuit(self, filename):
         return QuantumCircuit.from_qasm_file(filename)
+
+    def create_identity_T3T3(self):
+
+        # Run the quantum circuit on a statevector simulator backend
+        backend = Aer.get_backend('unitary_simulator')
+
+        toffoli=QuantumCircuit(3)
+        toffoli.ccx(0,1,2)
+        toffoli.draw(output='mpl', filename='t3_012.png')
+        toffoli.qasm(formatted = True, filename='t3_012.qasm')
+
+        toffoli.ccx(0,1,2)
+        toffoli.draw(output='mpl', filename='ct3_012_ct3_012.png')
+        toffoli.qasm(formatted = True, filename='ct3_012_ct3_012.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli.draw(output='mpl', filename='qt3_012.png')
+        toffoli.qasm(formatted = True, filename='qt3_012.qasm')
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli.draw(output='mpl', filename='qt3_012.png')
+        toffoli.qasm(formatted = True, filename='qt3_012_id1.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_quantum_toffoli(toffoli, 1, 0, 2)
+        toffoli.draw(output='mpl', filename='t3_012_t3_102.png')
+        toffoli.qasm(formatted = True, filename='t3_012_t3_102_id2.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_reverse_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli.draw(output='mpl', filename='t3_012_rt_012.png')
+        toffoli.qasm(formatted = True, filename='t3_012_rt_012_id3.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_reverse_quantum_toffoli(toffoli, 1, 0, 2)
+        toffoli.draw(output='mpl', filename='t3_012_rt_102.png')
+        toffoli.qasm(formatted = True, filename='t3_012_rt_102_id4.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_inverse_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli.draw(output='mpl', filename='t3_012_invt_012.png')
+        toffoli.qasm(formatted = True, filename='t3_012_invt_012_id5.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
+
+        toffoli=QuantumCircuit(3)
+        toffoli=self.get_quantum_toffoli(toffoli, 0, 1, 2)
+        toffoli=self.get_inverse_quantum_toffoli(toffoli, 1, 0, 2)
+        toffoli.draw(output='mpl', filename='t3_012_invt_102.png')
+        toffoli.qasm(formatted = True, filename='t3_012_invt_102_id6.qasm')
+        job = backend.run(toffoli)
+        result = job.result()
+        # Show the results
+        print(result.get_unitary(toffoli, decimals=1))
+        print(self.check_identity(toffoli))
