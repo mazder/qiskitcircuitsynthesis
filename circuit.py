@@ -15,11 +15,13 @@ from qiskit.visualization import plot_state_city
 #from qiskit.dagcircuit import DAGCircuit
 from qiskit.converters import circuit_to_dag
 
+
 class qcircuit:
+
     def __init__(self, n):
         self.controls = []
         self.target = []
-        self.gate = [] 
+        self.gate = []
         self.qcirc = QuantumCircuit(n)
 
     #return qiskit circuit
@@ -43,7 +45,7 @@ class qcircuit:
     def print_circuit(self):
         print("Qiskit Circuit is written into circuit.png")
         self.qcirc.draw(output='mpl', filename='circuit.png')
-    
+
     #return a vector of qubits index
     def find_qubits(self):
         dag = circuit_to_dag(self.qcirc)
@@ -53,27 +55,17 @@ class qcircuit:
     #return a vector of active qubits index
     def find_active_qubits(self):
         dag = circuit_to_dag(self.qcirc)
-        active_qubits = [qubit.index for qubit in self.qcirc.qubits 
+        active_qubits = [qubit.index for qubit in self.qcirc.qubits
                             if qubit not in dag.idle_wires()]
         return active_qubits
 
     #return a vector of ancilla qubits index
     def find_ancilla_qubits(self):
         dag = circuit_to_dag(self.qcirc)
-        ancilla_qubits = [qubit.index for qubit in self.qcirc.qubits 
+        ancilla_qubits = [qubit.index for qubit in self.qcirc.qubits
                             if qubit in dag.idle_wires()]
         return ancilla_qubits
 
-    #return true if two qcircuits are equivalent
-    def check_qcircuits_equivalent(self, circ_a, circ_b):
-        qcirc_a = circ_a.get_qcirc()
-        qcirc_b = circ_b.get_qcirc()
-        au = Operator(qcirc_a)
-        bu = Operator(qcirc_b)
-        #print(au)
-        #print(bu)
-        return au.dim == bu.dim and np.allclose(au.data, bu.data)
-    
     #return true if two qcirc are equivalent
     def check_qcirc_equivalent(self, qcirc_a, qcirc_b):
         au = Operator(qcirc_a)
@@ -84,10 +76,9 @@ class qcircuit:
 
     #return true if qcircuit is an identity
     def check_qcircuit_identity(self):
-        qcirc = self.get_qcirc()
         qubits=self.find_qubits()
         circ_id = QuantumCircuit(len(qubits))
-        return self.check_qcirc_equivalent(qcirc, circ_id)
+        return self.check_qcirc_equivalent(self.qcirc, circ_id)
 
     def get_inverse_quantum_toffoli(self, circ, x, y, z):
         circ.cx(x,y)
@@ -105,7 +96,7 @@ class qcircuit:
         circ.t(z)
         circ.cx(y,z)
         circ.h(z)
-        return circ; 
+        return circ;
 
     def get_reverse_quantum_toffoli(self, circ, x, y, z):
         circ.cx(x,y)
@@ -123,7 +114,7 @@ class qcircuit:
         circ.tdg(z)
         circ.cx(y,z)
         circ.h(z)
-        return circ; 
+        return circ;
 
     def get_quantum_toffoli(self, circ, x, y, z):
         circ.h(z)
@@ -141,7 +132,7 @@ class qcircuit:
         circ.t(x)
         circ.tdg(y)
         circ.cx(x,y)
-        return circ; 
+        return circ;
 
     def decompose_toffoli(self, circ):
         temp_circ = QuantumCircuit(circ.num_qubits)
@@ -169,12 +160,12 @@ class qcircuit:
         circ=temp_circ.copy()
         print("Toffoli decomposed qiskit circuit is written into decomposedcircuit.png")
         circ.draw(output='mpl', filename='decomposedcircuit.png')
-        print(circ.qasm)    
+        circ.qasm(formatted = True)
+
         return circ
 
-    def print_qasm_circuit(self, qcirc):
-        qcirc.qasm(formatted = True, filename = 'qcirc.qasm')
+    def write_qasm_circuit(self, qcirc, filename):
+        qcirc.qasm(formatted = True, filename = filename)
 
-    def read_circuit(self):
-        circ = QuantumCircuit.from_qasm_file('qcirc.qasm')
-        return circ
+    def read_qasm_circuit(self, filename):
+        return QuantumCircuit.from_qasm_file(filename)
