@@ -4,7 +4,7 @@ from qiskit import *
 from qiskit import *
 
 #import matplotlib inline
-
+#https://qiskit.org/documentation/_modules/qiskit/circuit/quantumcircuit.html
 # Import Aer
 from qiskit import Aer
 from qiskit.quantum_info.operators import Operator, Pauli
@@ -168,7 +168,13 @@ class qcircuit:
                 sys.exit("Unrecognized gate in circuit to decompose!")
         circ=temp_circ.copy()
         print("Toffoli decomposed qiskit circuit is written into decomposedcircuit.png")
-        circ.draw(output='mpl', filename='decomposedcircuit.png')    
+        circ.draw(output='mpl', filename='decomposedcircuit.png')
+        print(circ.qasm)    
         return circ
 
-    
+    def print_qasm_circuit(self, qcirc):
+        qcirc.qasm(formatted = True, filename = 'qcirc.qasm')
+
+    def read_circuit(self):
+        circ = QuantumCircuit.from_qasm_file('qcirc.qasm')
+        return circ

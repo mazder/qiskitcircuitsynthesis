@@ -1,7 +1,8 @@
 import numpy as np
 import sys
 import circuit
-
+from qiskit import *
+from qiskit import QuantumCircuit
 
 def main():
 
@@ -17,6 +18,11 @@ def main():
 
    # print(circ.check_qcircuit_identity())
     
+    circ.print_qasm_circuit(qcirc)
+
+    new_circ = QuantumCircuit()
+
+
     print("Program End")
 
 
